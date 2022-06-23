@@ -1,15 +1,73 @@
+<?php
+//Database conectivity
+$insertSuccess=false;
+
+
+if(isset($_POST['name'])){
+
+$server="localhost";
+$username="root";
+$password="";
+
+$con=mysqli_connect($server,$username,$password);
+
+if(!$con){
+    die("Connection to Database failed because of ".mysqli_connect_error());
+}
+else{
+    // echo "Success in connecting to db";
+    echo "<br>";
+}
+
+//user input data in post request form supported by mysqli
+
+$name = $_POST['name'];
+$age = $_POST['age'];
+$gender = $_POST['gender'];
+$email = $_POST['email'];
+$phone = $_POST['phone'];
+$other = $_POST['other'];
+
+
+
+$query="INSERT INTO `trip`.`trip` (`Name`, `Age`, `Gender`, `Email`, `Phone`, `Other`, `Date`) VALUES ('$name', '$age', '$gender', '$email', '$phone', '$other', current_timestamp())";
+
+// echo $query;
+
+//Adding our post query that already loaded with data to our database
+
+
+if($con->query($query)==true){
+    // echo "Successfully inserted";
+    $insertSuccess=true;
+
+}
+
+else{
+    // echo "Error: $query <br> $con->error";
+    $insertSuccess=false;
+
+}
+
+
+
+
+$con->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Travel Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Simple Travel Form with php and mysql</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <!-- Navbar -->
-    <div class="container m-5 px-5">
+    <div class="container mx-auto">
       <nav
         class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
       >
@@ -99,27 +157,63 @@
           </div>
         </div>
       </nav>
+
+      <!-- Alert -->
+
+<div
+  class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+  role="alert"
+>
+  <div class="flex">
+    <div class="py-1">
+      <svg
+        class="fill-current h-6 w-6 text-teal-500 mr-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path
+          d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+        />
+      </svg>
     </div>
+    <div>
+      <?php
+    if($insertSuccess==true){
+     echo "Your input is noted. Thank you for Submitting the form.";
+    }
+    else{
+    echo "Error in adding";
+    }
+?>
+    </div>
+  </div>
+</div>
 
 
-    <!-- Heading -->
-    <h1 class="container m-5 p-5 font-medium leading-tight text-5xl mt-0 mb-2 text-600">Travel Form </h1>
 
-    <!-- form -->
+      <!-- Heading -->
+      <h1 class="p-5 font-medium leading-tight text-5xl mt-0 mb-2 text-600">
+        Travel form
+      </h1>
 
-    <div class="container mx-auto px-5">
-      <form class="w-full max-w-lg">
+      <form
+        class="m-5 items-center w-full max-w-lg"
+        action="index.php"
+        method="post"
+      >
         <div class="flex flex-wrap -mx-3 mb-6">
+          <!-- Name field -->
           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              for="grid-first-name"
+              for="name"
             >
               Name
             </label>
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
+              name="name"
+              id="name"
               type="text"
               placeholder="ex. Tejas Singh"
             />
@@ -127,107 +221,87 @@
               Please fill out this field.
             </p>
           </div>
+
+          <!-- Age field -->
           <div class="w-full md:w-1/2 px-3">
             <label
               class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              for="grid-last-name"
+              for="age"
             >
               Age
             </label>
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-last-name"
+              name="age"
+              id="age"
               type="number"
               placeholder="ex. 20"
             />
           </div>
         </div>
+
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full px-3">
             <label
               class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              for="grid-password"
+              for="email"
             >
               Email
             </label>
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-password"
+              name="email"
+              id="email"
               type="mail"
               value="@gmail.com"
             />
-           
           </div>
-          <br>
 
           <div class="py-2 w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              for="grid-first-name"
+              for="phone"
             >
               Phone
             </label>
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
+              name="phone"
+              id="phone"
               type="phone"
               placeholder="ex. 8002865470"
             />
-          
           </div>
           <div class="py-2 w-full md:w-1/2 px-3">
             <label
               class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              for="grid-last-name"
+              for="gender"
             >
               Gender
             </label>
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-last-name"
+              name="gender"
+              id="gender"
               type="text"
               placeholder="ex. Male "
             />
-
-
-
-            
           </div>
 
           <textarea
-          class="
-            container mx-auto px-5 form-control
-            block
-            w-full
-            px-3
-            py-1.5
-            text-base
-            font-normal
-            text-gray-700
-            bg-white bg-clip-padding
-            border border-solid border-gray-300
-            rounded
-            transition
-            ease-in-out
-            m-0
-            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
-          "
-          id="exampleFormControlTextarea1"
-          rows="3"
-          placeholder="Your message"
-        ></textarea>
-        </div>
+            class="container mx-auto px-5 form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+            name="other"
+            id="other"
+            rows="3"
+            placeholder="Your message"
+          ></textarea>
 
-
-        <div class="md:flex md:items-center">
-            <div class="md:w-1/3"> 
-                <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="button">
-                    Submit
-                  </button>
-            </div>
-            <div class="md:w-2/3">
-              <button class="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="button">
-                Reset
+          <div class="md:flex md:items-center">
+            <div class="md:w-1/3">
+              <button
+                class="btn shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+              >
+                Submit
               </button>
             </div>
           </div>
