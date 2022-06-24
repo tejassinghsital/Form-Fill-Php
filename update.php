@@ -2,6 +2,7 @@
 include "connect.php";
 
 $insertSuccess=false;
+$id=$_GET['updateid'];
 
 if(isset($_POST['submit'])){
 
@@ -17,7 +18,7 @@ $other = $_POST['other'];
 
 
 
-$query="INSERT INTO `trip`.`trip` (`Name`, `Age`, `Gender`, `Email`, `Phone`, `Other`, `Date`) VALUES ('$name', '$age', '$gender', '$email', '$phone', '$other', current_timestamp())";
+$query="update `trip`.`trip` set id=$id,Name='$name',Age='$age',Gender='$gender',Email='$email',Phone='$phone', Other='$other' where id=$id";
 
 // echo $query;
 
@@ -25,14 +26,14 @@ $query="INSERT INTO `trip`.`trip` (`Name`, `Age`, `Gender`, `Email`, `Phone`, `O
 
 
 if($con->query($query)==true){
-    echo "Successfully inserted";
-   header('location: display.php');
+    echo "Successfully Updated";
+//    header('location: display.php');
     $insertSuccess=true;
 
 }
 
 else{
-    echo "Error: $query <br> $con->error";
+    die(mysqli_error($con));
     $insertSuccess=false;
 
 }
@@ -288,7 +289,7 @@ else{
              
               <button
                 class="btn shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" name="submit">
-                Submit
+                Update
               <!--  <a href="display.php">Submit</a> -->
                
               </button>
